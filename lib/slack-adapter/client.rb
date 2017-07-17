@@ -5,15 +5,11 @@ require 'httparty'
 
 # Slapi Class - Primary Class
 # Its main functions are to:
-#  1. Set Sinatra Environment/Config
-#     - configs loaded from ./config folder
-#     - bot config has bot.local.yml then bot.yml preference
-#  2. Creates Brain Instance
-#     - lib/brain/redis.rb
-#  3. Starts Bot
-#     - lib/client/bot.rb
+#  1. Configure Slack Client
+#     - Iterates over the bot.yml mounted to adapter container
+#  2. Contains methods for require route access
+#  3. Sends any Messages to SLAPI messages endpoint
 class Client
-
   GREEN = '#229954'
   YELLOW = '#F7DC6F'
   RED = '#A93226'
@@ -43,6 +39,10 @@ class Client
       message_stream(data.channel, data.text, data.user) unless data.user == @bot_id
     end
     @client.start_async
+  end
+
+  def shutdown
+    @client.stop!
   end
 
   def client_info
