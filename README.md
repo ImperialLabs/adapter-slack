@@ -14,12 +14,7 @@ Config required SLAPI config file `bot.yml`
 adapter:
   service: slack # Enables option alternative adapters
   config:
-    token:
-    user_agent: # User-agent, defaults to Slack Ruby Client/version.
-    proxy: # Optional HTTP proxy.
-    ca_path: # Optional SSL certificates path.
-    ca_file: # Optional SSL certificates file.
-    endpoint: # Slack endpoint, default is https://slack.com/api.
+    token: # API token
     logger: # Optional Logger instance that logs HTTP requests.
  ```
 ## Testing

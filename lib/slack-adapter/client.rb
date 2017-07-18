@@ -16,23 +16,27 @@ class Slack
 
   def initialize(settings)
     @headers = {}
-
-    # Setup Realtime Client
-    Slack.configure do |config|
-      config.token = settings.adapter['token']
-      raise 'Missing Slack Token configuration!' unless config.token
-    end
-
+    slack_configure(settings.adapter.config)
     @client = Slack::RealTime::Client.new
     @bot_name = @client.self.name
     @bot_id = @client.self.id
+    @team = @client.team.name
     @logger = Logger.new(STDOUT)
     @logger.level = settings.logger_level
   end
 
+  def slack_configure(config)
+    # Setup Realtime Client
+    Slack.configure do |conf|
+      conf.token = config.token
+      raise 'Missing Slack Token configuration!' unless conf.token
+      conf.logger = config.logger if config.logger
+    end
+  end
+
   def run
     @client.on :hello do
-      @logger.info("Slapi: Successfully connected, welcome '#{@bot_name}' to '#{@client.team.name}'")
+      @logger.info("Slack: Successfully connected, welcome '#{@bot_name}' to '#{@team}'")
     end
 
     @client.on :message do |data|
@@ -42,6 +46,7 @@ class Slack
   end
 
   def shutdown
+    @logger.info("Slack: disconnecting '#{@bot_name}' from '#{@client.team.name}'")
     @client.stop!
   end
 
@@ -52,7 +57,7 @@ class Slack
         id: @bot_id
       },
       account: {
-        name: @client.team.name
+        name: @team
       }
     }.to_json
   end
