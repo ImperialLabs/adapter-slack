@@ -9,7 +9,7 @@ require 'httparty'
 #     - Iterates over the bot.yml mounted to adapter container
 #  2. Contains methods for require route access
 #  3. Sends any Messages to SLAPI messages endpoint
-class Client
+class Slack
   GREEN = '#229954'
   YELLOW = '#F7DC6F'
   RED = '#A93226'
@@ -78,6 +78,30 @@ class Client
       channel: channel,
       text: text
     )
+  end
+
+  def channel_list
+    @client.channels_list.channels
+  end
+
+  def channel_info(channel)
+    @client.channels_info(channel: channel)
+  end
+
+  def user_search(user)
+    @client.users_search(user: user)
+  end
+
+  def user_info(user)
+    @client.users_info(user: user)
+  end
+
+  def join(channel)
+    @client.channels_join(name: channel)
+  end
+
+  def leave(channel)
+    @client.channels_leave(name: channel)
   end
 
   def message_stream(channel, text, user)

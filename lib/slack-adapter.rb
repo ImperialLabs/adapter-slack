@@ -11,7 +11,7 @@ require 'sinatra/config_file'
 #  1. Set Sinatra Environment/Config
 #     - configs loaded from ./config folder
 #  2. Contains Required Endpoints for SLAPI
-class SlackAdapter < Sinatra::Base
+class Adapater < Sinatra::Base
   set :root, File.dirname(__FILE__)
   register Sinatra::ConfigFile
 
@@ -31,16 +31,41 @@ class SlackAdapter < Sinatra::Base
   @logger = Logger.new(STDOUT)
   @logger.level = settings.logger_level
 
-  @client = Client.new(settings)
+  @slack = Slack.new(settings)
+
+  get '/info' do
+    begin
+      body @slack.client_info
+      status 200
+    rescue => e
+      status 500
+      body "[ERROR] - Received #{e}"
+      @logger.error("[ERROR] - Received #{e}")
+    end
+  end
 
   post '/join' do
     raise 'missing channel' unless params[:channel]
-    @client.channels_join(name: channel)
+    begin
+      body @slack.join(params[:channel])
+      status 200
+    rescue => e
+      status 500
+      body "[ERROR] - Received #{e}"
+      @logger.error("[ERROR] - Received #{e}")
+    end
   end
 
   post '/part' do
     raise 'missing channel' unless params[:channel]
-    @client.channels_leave(name: channel)
+    begin
+      body @slack.leave(params[:channel])
+      status 200
+    rescue => e
+      status 500
+      body "[ERROR] - Received #{e}"
+      @logger.error("[ERROR] - Received #{e}")
+    end
   end
 
   post '/users' do
@@ -48,9 +73,23 @@ class SlackAdapter < Sinatra::Base
     raise 'missing user' unless params[:user]
     case params[:type]
     when params[:type].casecmp('search')
-      @client.users_search(user: params[:user])
+      begin
+        body @slack.user_search(params[:user])
+        status 200
+      rescue => e
+        status 500
+        body "[ERROR] - Received #{e}"
+        @logger.error("[ERROR] - Received #{e}")
+      end
     when params[:type].casecmp('info')
-      @client.users_info(user: params[:user])
+      begin
+        body @slack.user_info(params[:user])
+        status 200
+      rescue => e
+        status 500
+        body "[ERROR] - Received #{e}"
+        @logger.error("[ERROR] - Received #{e}")
+      end
     end
   end
 
@@ -59,11 +98,32 @@ class SlackAdapter < Sinatra::Base
     raise 'missing channel' unless params[:channel]
     case params[:type]
     when params[:type].casecmp('plain')
-      @client.chat_plain(params[:text], params[:channel])
+      begin
+        body @slack.chat_plain(params[:text], params[:channel])
+        status 200
+      rescue => e
+        status 500
+        body "[ERROR] - Received #{e}"
+        @logger.error("[ERROR] - Received #{e}")
+      end
     when params[:type].casecmp('emote')
-      @client.chat_emote(params[:text], params[:channel])
+      begin
+        body @slack.chat_emote(params[:text], params[:channel])
+        status 200
+      rescue => e
+        status 500
+        body "[ERROR] - Received #{e}"
+        @logger.error("[ERROR] - Received #{e}")
+      end
     when params[:type].casecmp('formatted')
-      @client.chat_attachment(params[:attachment], params[:channel])
+      begin
+        body @slack.chat_attachment(params[:attachment], params[:channel])
+        status 200
+      rescue => e
+        status 500
+        body "[ERROR] - Received #{e}"
+        @logger.error("[ERROR] - Received #{e}")
+      end
     end
   end
 
@@ -71,17 +131,45 @@ class SlackAdapter < Sinatra::Base
     raise 'missing type of user action' unless params[:type]
     case params[:type]
     when params[:type].casecmp('list')
-      @client.channels_list.channels
+      begin
+        body @slack.channel_list
+        status 200
+      rescue => e
+        status 500
+        body "[ERROR] - Received #{e}"
+        @logger.error("[ERROR] - Received #{e}")
+      end
     when params[:type].casecmp('info')
       raise 'missing channel' unless params[:channel]
-      @client.channels_info(channel: params[:channel])
+      begin
+        body @slack.channel_info(params[:channel])
+        status 200
+      rescue => e
+        status 500
+        body "[ERROR] - Received #{e}"
+        @logger.error("[ERROR] - Received #{e}")
+      end
   end
 
   post '/run' do
-    @client.run
+    begin
+      @slack.run
+      status 200
+    rescue => e
+      status 500
+      body "[ERROR] - Received #{e}"
+      @logger.error("[ERROR] - Received #{e}")
+    end
   end
 
   post 'shutdown' do
-    @client.shutdown
+    begin
+      @slack.shutdown
+      status 200
+    rescue => e
+      status 500
+      body "[ERROR] - Received #{e}"
+      @logger.error("[ERROR] - Received #{e}")
+    end
   end
 end
