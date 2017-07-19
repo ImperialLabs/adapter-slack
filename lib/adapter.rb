@@ -11,7 +11,7 @@ require 'sinatra/config_file'
 #  1. Set Sinatra Environment/Config
 #     - configs loaded from ./config folder
 #  2. Contains Required Endpoints for SLAPI
-class Adapater < Sinatra::Base
+class Adapter < Sinatra::Base
   set :root, File.dirname(__FILE__)
   register Sinatra::ConfigFile
 

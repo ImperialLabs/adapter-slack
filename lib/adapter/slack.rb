@@ -10,9 +10,9 @@ require 'httparty'
 #  2. Contains methods for require route access
 #  3. Sends any Messages to SLAPI messages endpoint
 class Slack
-  GREEN = '#229954'
-  YELLOW = '#F7DC6F'
-  RED = '#A93226'
+  GREEN = '#229954'.freeze
+  YELLOW = '#F7DC6F'.freeze
+  RED = '#A93226'.freeze
 
   def initialize(settings)
     @headers = {}
@@ -46,7 +46,7 @@ class Slack
   end
 
   def shutdown
-    @logger.info("Slack: disconnecting '#{@bot_name}' from '#{@client.team.name}'")
+    @logger.info("Slack: disconnecting '#{@bot_name}' from '#{@team}'")
     @client.stop!
   end
 
@@ -110,13 +110,15 @@ class Slack
   end
 
   def message_stream(channel, text, user)
+    body = {
+      channel: channel,
+      text: text,
+      user: user
+    }.to_json
+
     HTTParty.post(
       '/v1/messages',
-      body: {
-        channel: channel,
-        text: text,
-        user: user
-      },
+      body: body,
       headers: @headers
     )
   end
