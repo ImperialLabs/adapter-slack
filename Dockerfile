@@ -2,11 +2,11 @@ FROM slapi/ruby:latest
 
 MAINTAINER SLAPI Devs
 
-ENV APP_HOME /api
+ENV APP_HOME /adapter
 
 RUN mkdir -p $APP_HOME && chmod 777 $APP_HOME
 
-WORKDIR /api
+WORKDIR /adapter
 
 COPY supervisord.conf /etc/supervisor.d/supervisord.conf
 
