@@ -15,11 +15,10 @@ COPY . $APP_HOME
 
 RUN apk update && apk add \
     supervisor &&\
+    echo 'gem: --no-document' >> /root/.gemrc &&\
     if [ -f Gemfile.lock ]; then rm -f Gemfile.lock; fi &&\
-    gem install json \
-    sinatra \
-    sinatra-contrib \
-    httparty &&\
+    gem install bundle &&\
+    bundle install &&\
     rm -rf /var/cache/apk/* &&\
     rm -rf /tmp/*
 

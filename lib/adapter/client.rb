@@ -3,6 +3,7 @@
 require 'json'
 require 'httparty'
 require 'logger'
+require 'slack-ruby-client'
 
 # Slapi Class - Primary Class
 # Its main functions are to:
@@ -10,27 +11,24 @@ require 'logger'
 #     - Iterates over the bot.yml mounted to adapter container
 #  2. Contains methods for require route access
 #  3. Sends any Messages to SLAPI messages endpoint
-class Slack
+class Client
   GREEN = '#229954'.freeze
   YELLOW = '#F7DC6F'.freeze
   RED = '#A93226'.freeze
 
-  def initialize(settings)
+  def initialize(config)
     @headers = {}
-    slack_configure(settings.adapter.config)
+    slack_configure(config)
     @client = Slack::RealTime::Client.new
-    @bot_name = @client.self.name
-    @bot_id = @client.self.id
-    @team = @client.team.name
     @logger = Logger.new(STDOUT)
-    @logger.level = settings.logger_level
+    @logger.level = 'info'
   end
 
   def slack_configure(config)
     # Setup Realtime Client
-    Slack.configure do |conf|
-      config.each do |setting|
-        conf[setting] = setting
+    Slack::RealTime::Client.config do |conf|
+      config.each do |setting, value|
+        conf[setting] = value
       end
       raise 'Missing Slack Token configuration!' unless conf.token
     end
@@ -38,28 +36,28 @@ class Slack
 
   def run
     @client.on :hello do
-      @logger.info("Slack: Successfully connected, welcome '#{@bot_name}' to '#{@team}'")
+      @logger.info("Slack: Successfully connected, welcome '#{@client.self.name}' to '#{@client.team.name}'")
     end
 
     @client.on :message do |data|
-      message_stream(data.channel, data.text, data.user) unless data.user == @bot_id
+      message_stream(data.channel, data.text, data.user) unless data.user == @client.self.id
     end
     @client.start_async
   end
 
   def shutdown
-    @logger.info("Slack: disconnecting '#{@bot_name}' from '#{@team}'")
+    @logger.info("Slack: disconnecting '#{@client.self.name}' from '#{@client.team.name}'")
     @client.stop!
   end
 
   def client_info
     {
       bot: {
-        name: @bot_name,
-        id: @bot_id
+        name: @client.self.name,
+        id: @client.self.id
       },
       account: {
-        name: @team
+        name: @client.team.name
       }
     }.to_json
   end

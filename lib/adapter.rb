@@ -6,6 +6,7 @@ require 'logger'
 require 'sinatra'
 require 'sinatra/base'
 require 'sinatra/config_file'
+require_relative 'adapter/client'
 
 # Slapi Class - Primary Class
 # Its main functions are to:
@@ -16,23 +17,18 @@ class Adapter < Sinatra::Base
   set :root, File.dirname(__FILE__)
   register Sinatra::ConfigFile
 
-  Dir[File.dirname(__FILE__) + './**/*.rb'].each { |file| require file }
+  config_file '../environments.yml'
+  config_file '../bot.yml'
 
   configure :production, :test, :development do
     enable :logging
   end
 
-  config_file 'environments.yml'
-
-  config_file 'bot.yml' if File.file?('./bot.yml')
-  raise 'No config found! Please attach bot.yml to adapter container' unless File.file?('./bot.yml')
-
   @headers = {}
 
   @logger = Logger.new(STDOUT)
-  @logger.level = settings.logger_level
-
-  @slack = Slack.new(settings)
+  @logger.level = 'info'
+  @slack = Client.new(settings.adapter['config'])
 
   get '/info' do
     begin
