@@ -15,7 +15,7 @@ class Adapter < Sinatra::Base
   set :root, File.dirname(__FILE__)
   register Sinatra::ConfigFile
 
-  Dir[File.dirname(__FILE__) + '/**/*.rb'].each { |file| require file }
+  Dir[File.dirname(__FILE__) + './**/*.rb'].each { |file| require file }
 
   configure :production, :test, :development do
     enable :logging

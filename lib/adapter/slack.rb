@@ -28,9 +28,10 @@ class Slack
   def slack_configure(config)
     # Setup Realtime Client
     Slack.configure do |conf|
-      conf.token = config.token
+      config.each do |setting|
+        conf[setting] = setting
+      end
       raise 'Missing Slack Token configuration!' unless conf.token
-      conf.logger = config.logger if config.logger
     end
   end
 
