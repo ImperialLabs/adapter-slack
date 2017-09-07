@@ -149,6 +149,7 @@ class Adapter < Sinatra::Base
         body "[ERROR] - Received #{e}"
         @logger.error("[ERROR] - Received #{e}")
       end
+    end
   end
 
   post '/run' do
