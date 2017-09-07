@@ -2,6 +2,7 @@
 
 require 'json'
 require 'httparty'
+require 'logger'
 
 # Slapi Class - Primary Class
 # Its main functions are to:

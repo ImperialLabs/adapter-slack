@@ -2,6 +2,7 @@
 
 require 'json'
 require 'httparty'
+require 'logger'
 require 'sinatra'
 require 'sinatra/base'
 require 'sinatra/config_file'
