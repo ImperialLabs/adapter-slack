@@ -32,7 +32,8 @@ class Adapter < Sinatra::Base
 
   get '/info' do
     begin
-      body @@slack.client_info
+      response = @@slack.client_info
+      body response.to_s
       status 200
     rescue => e
       status 500
@@ -43,7 +44,8 @@ class Adapter < Sinatra::Base
   post '/join' do
     raise 'missing channel' unless params[:channel]
     begin
-      body @@slack.join(params[:channel])
+      response = @@slack.join(params[:channel])
+      body response.to_s
       status 200
     rescue => e
       status 500
@@ -54,7 +56,8 @@ class Adapter < Sinatra::Base
   post '/part' do
     raise 'missing channel' unless params[:channel]
     begin
-      body @@slack.leave(params[:channel])
+      response = @@slack.leave(params[:channel])
+      body response.to_s
       status 200
     rescue => e
       status 500
@@ -68,7 +71,8 @@ class Adapter < Sinatra::Base
     case params[:type]
     when params[:type].casecmp('search')
       begin
-        body @@slack.user_search(params[:user])
+        response = @@slack.user_search(params[:user])
+        body response.to_s
         status 200
       rescue => e
         status 500
@@ -76,7 +80,8 @@ class Adapter < Sinatra::Base
       end
     when params[:type].casecmp('info')
       begin
-        body @@slack.user_info(params[:user])
+        response = @@slack.user_info(params[:user])
+        body response.to_s
         status 200
       rescue => e
         status 500
@@ -88,26 +93,28 @@ class Adapter < Sinatra::Base
   post '/messages' do
     raise 'missing type of message' unless params[:type]
     raise 'missing channel' unless params[:channel]
-    case params[:type]
-    when params[:type].casecmp('plain')
+    if params[:type].include?('plain')
       begin
-        body @@slack.chat_plain(params[:text], params[:channel])
+        response = @@slack.chat_plain(params[:text], params[:channel])
+        body response.to_s
         status 200
       rescue => e
         status 500
         body "[ERROR] - Received #{e}"
       end
-    when params[:type].casecmp('emote')
+    elsif params[:type].include?('emote')
       begin
-        body @@slack.chat_emote(params[:text], params[:channel])
+        response = @@slack.chat_emote(params[:text], params[:channel])
+        body response.to_s
         status 200
       rescue => e
         status 500
         body "[ERROR] - Received #{e}"
       end
-    when params[:type].casecmp('formatted')
+    elsif params[:type].include?('formatted')
       begin
-        body @@slack.chat_attachment(params[:attachment], params[:channel])
+        response = @@slack.chat_attachment(params[:channel], params[:attachment])
+        body response.to_s
         status 200
       rescue => e
         status 500
@@ -121,7 +128,8 @@ class Adapter < Sinatra::Base
     case params[:type]
     when params[:type].casecmp('list')
       begin
-        body @@slack.channel_list
+        response = @@slack.channel_list
+        body response.to_s
         status 200
       rescue => e
         status 500
@@ -130,7 +138,8 @@ class Adapter < Sinatra::Base
     when params[:type].casecmp('info')
       raise 'missing channel' unless params[:channel]
       begin
-        body @@slack.channel_info(params[:channel])
+        response = @@slack.channel_info(params[:channel])
+        body response.to_s
         status 200
       rescue => e
         status 500
