@@ -18,20 +18,10 @@ class Client
 
   def initialize(config)
     @headers = {}
-    slack_configure(config)
-    @client = Slack::RealTime::Client.new
+    raise 'No token! Please add a slack token to the bot.yml' unless config[:token]
+    @client = Slack::RealTime::Client.new(config)
     @logger = Logger.new(STDOUT)
     @logger.level = 'info'
-  end
-
-  def slack_configure(config)
-    # Setup Realtime Client
-    Slack::RealTime::Client.config do |conf|
-      config.each do |setting, value|
-        conf[setting] = value
-      end
-      raise 'Missing Slack Token configuration!' unless conf.token
-    end
   end
 
   def run
