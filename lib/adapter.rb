@@ -24,8 +24,8 @@ class Adapter < Sinatra::Base
   configure :production, :test, :development do
     enable :logging
   end
-
-  headers = ENV['HEADERS'] || {}
+  json_headers = ENV['HEADERS'] ? ENV['HEADERS'].to_json : false
+  headers = json_headers ? JSON.parse(json_headers) : {}
   @@slack = Client.new(settings.adapter['config'], headers)
   @@slack.run
 
