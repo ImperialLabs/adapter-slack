@@ -16,8 +16,8 @@ class Client
   YELLOW = '#F7DC6F'.freeze
   RED = '#A93226'.freeze
 
-  def initialize(config)
-    @headers = {}
+  def initialize(config, headers = {})
+    @headers = headers
     raise 'No token! Please add a slack token to the bot.yml' unless config[:token]
     @client = Slack::RealTime::Client.new(config)
     @logger = Logger.new(STDOUT)
@@ -107,7 +107,7 @@ class Client
     }.to_json
 
     HTTParty.post(
-      '/v1/messages',
+      "#{ENV['BOT_URL']}/v1/messages",
       body: body,
       headers: @headers
     )

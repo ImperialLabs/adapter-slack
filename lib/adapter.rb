@@ -25,10 +25,8 @@ class Adapter < Sinatra::Base
     enable :logging
   end
 
-  @headers = {}
-  @logger = Logger.new(STDOUT)
-  @logger.level = 'info'
-  @@slack = Client.new(settings.adapter['config'])
+  headers = ENV['HEADERS'] || {}
+  @@slack = Client.new(settings.adapter['config'], headers)
   @@slack.run
 
   get '/info' do
