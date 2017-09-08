@@ -19,11 +19,11 @@ class Adapter < Sinatra::Base
 
   config_file '../environments.yml'
   config_file '../bot.yml'
-  # require_relative 'routes/client'
 
   configure :production, :test, :development do
     enable :logging
   end
+
   json_headers = ENV['HEADERS'] ? ENV['HEADERS'].to_json : false
   headers = json_headers ? JSON.parse(json_headers) : {}
   @@slack = Client.new(settings.adapter['config'], headers)
