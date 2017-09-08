@@ -104,7 +104,7 @@ class Client
       channel: channel,
       text: text,
       user: user
-    }.to_json
+    }
 
     HTTParty.post(
       "http://#{ENV['BOT_URL']}/v1/messages",

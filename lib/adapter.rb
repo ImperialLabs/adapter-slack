@@ -20,6 +20,8 @@ class Adapter < Sinatra::Base
   config_file '../environments.yml'
   config_file '../bot.yml'
 
+  set :json_content_type, :js
+
   configure :production, :test, :development do
     enable :logging
   end
