@@ -107,7 +107,7 @@ class Client
     }.to_json
 
     HTTParty.post(
-      "#{ENV['BOT_URL']}/v1/messages",
+      "http://#{ENV['BOT_URL']}/v1/messages",
       body: body,
       headers: @headers
     )
