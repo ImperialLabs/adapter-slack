@@ -7,7 +7,6 @@ require 'sinatra'
 require 'sinatra/base'
 require 'sinatra/config_file'
 require_relative 'adapter/client'
-require_relative 'helper/route_helper'
 
 # Slapi Class - Primary Class
 # Its main functions are to:
@@ -15,8 +14,6 @@ require_relative 'helper/route_helper'
 #     - configs loaded from ./config folder
 #  2. Contains Required Endpoints for SLAPI
 class Adapter < Sinatra::Base
-  include RouteHelper
-
   set :root, File.dirname(__FILE__)
   register Sinatra::ConfigFile
 
