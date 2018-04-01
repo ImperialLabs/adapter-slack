@@ -9,5 +9,5 @@ gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'slack-ruby-client'
 
-gem 'debase', '~> 0.2.2.beta10'
-gem 'ruby-debug-ide', '~> 0.6.1.beta9'
+gem 'debase', '~> 0.2.2'
+gem 'ruby-debug-ide', '~> 0.6.1'
