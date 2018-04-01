@@ -33,7 +33,7 @@ class Adapter < Sinatra::Base
   get '/info' do
     begin
       response = @@slack.client_info
-      body response.to_s
+      body response
       status 200
     rescue => e
       status 500
