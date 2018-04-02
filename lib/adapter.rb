@@ -45,7 +45,7 @@ class Adapter < Sinatra::Base
     raise 'missing channel' unless params[:channel]
     begin
       response = @@slack.join(params[:channel])
-      body response.to_s
+      body response
       status 200
     rescue => e
       status 500
@@ -57,7 +57,7 @@ class Adapter < Sinatra::Base
     raise 'missing channel' unless params[:channel]
     begin
       response = @@slack.leave(params[:channel])
-      body response.to_s
+      body response
       status 200
     rescue => e
       status 500
@@ -72,7 +72,7 @@ class Adapter < Sinatra::Base
     when params[:type].casecmp('search')
       begin
         response = @@slack.user_search(params[:user])
-        body response.to_s
+        body response
         status 200
       rescue => e
         status 500
@@ -81,7 +81,7 @@ class Adapter < Sinatra::Base
     when params[:type].casecmp('info')
       begin
         response = @@slack.user_info(params[:user])
-        body response.to_s
+        body response
         status 200
       rescue => e
         status 500
@@ -96,7 +96,7 @@ class Adapter < Sinatra::Base
     if params[:type].include?('plain')
       begin
         response = @@slack.chat_plain(params[:text], params[:channel])
-        body response.to_s
+        body response
         status 200
       rescue => e
         status 500
@@ -105,7 +105,7 @@ class Adapter < Sinatra::Base
     elsif params[:type].include?('emote')
       begin
         response = @@slack.chat_emote(params[:text], params[:channel])
-        body response.to_s
+        body response
         status 200
       rescue => e
         status 500
@@ -114,7 +114,7 @@ class Adapter < Sinatra::Base
     elsif params[:type].include?('formatted')
       begin
         response = @@slack.chat_attachment(params[:channel], params[:attachment])
-        body response.to_s
+        body response
         status 200
       rescue => e
         status 500
@@ -129,7 +129,7 @@ class Adapter < Sinatra::Base
     when params[:type].casecmp('list')
       begin
         response = @@slack.channel_list
-        body response.to_s
+        body response
         status 200
       rescue => e
         status 500
@@ -139,7 +139,7 @@ class Adapter < Sinatra::Base
       raise 'missing channel' unless params[:channel]
       begin
         response = @@slack.channel_info(params[:channel])
-        body response.to_s
+        body response
         status 200
       rescue => e
         status 500

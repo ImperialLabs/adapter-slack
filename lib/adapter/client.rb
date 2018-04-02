@@ -12,9 +12,9 @@ require 'slack-ruby-client'
 #  2. Contains methods for require route access
 #  3. Sends any Messages to SLAPI messages endpoint
 class Client
-  GREEN = '#229954'.freeze
-  YELLOW = '#F7DC6F'.freeze
-  RED = '#A93226'.freeze
+  GREEN = '#229954'
+  YELLOW = '#F7DC6F'
+  RED = '#A93226'
 
   def initialize(config, headers = {})
     @headers = headers
